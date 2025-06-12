@@ -1,5 +1,5 @@
 -- EduPlatform uchun SQL Skript
--- Generatsiya qilingan sana: 2025-06-12T20:28:58.146577
+-- Generatsiya qilingan sana: 2025-06-12T20:45:39.032853
 
 -- 1. Jadvallarni yaratish
 
@@ -38,9 +38,15 @@ CREATE TABLE Grades (
 -- 2. Ma'lumotlarni jadvallarga qo'shish
 
 -- Ma'lumotlar: Users
-INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497420475407, N'Admin Akmalov', N'admin@edu.com', N'Admin', NULL, NULL, N'2025-06-12T20:27:27.506542', N'');
-INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497420475965, N'Ustoz Olimov', N'teacher@edu.com', N'O''qituvchi', NULL, NULL, N'2025-06-12T20:27:27.510557', N'Fanlar: Matematika, Fizika');
-INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497420476005, N'Ali Valiyev', N'ali@edu.com', N'O''quvchi', NULL, NULL, N'2025-06-12T20:27:27.529979', N'Sinf: 9-A');
-INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497420475899, N'Vali Aliyev', N'vali@edu.com', N'O''quvchi', NULL, NULL, N'2025-06-12T20:27:27.545743', N'Sinf: 9-A');
-INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497420475957, N'Valiyev Ota', N'parent@edu.com', N'Ota-ona', NULL, NULL, N'2025-06-12T20:27:27.547315', N'Farzandlar soni: 2');
-INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497421237635, N'Jasurbek Turgunboyev', N'turgunboyevv777@gmail.com', N'O''quvchi', NULL, NULL, N'2025-06-12T20:28:43.704770', N'Sinf: 9-A');
+INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497426867443, N'Admin Akmalov', N'admin@edu.com', N'Admin', NULL, NULL, N'2025-06-12T20:38:06.670097', N'');
+INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497426867300, N'Ustoz Olimov', N'teacher@edu.com', N'O''qituvchi', NULL, NULL, N'2025-06-12T20:38:06.672086', N'Fanlar: Matematika, Fizika');
+INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497426867120, N'Ali Valiyev', N'ali@edu.com', N'O''quvchi', NULL, NULL, N'2025-06-12T20:38:06.674027', N'Sinf: 9-A');
+INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497426866741, N'Vali Aliyev', N'vali@edu.com', N'O''quvchi', NULL, NULL, N'2025-06-12T20:38:06.683300', N'Sinf: 9-A');
+INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497426867633, N'Valiyev Ota', N'parent@edu.com', N'Ota-ona', NULL, NULL, N'2025-06-12T20:38:06.698381', N'Farzandlar soni: 2');
+INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497427421401, N'Failiya ism', N'ism@gmail.com', N'O''quvchi', NULL, NULL, N'2025-06-12T20:39:02.051632', N'Sinf: 9-A');
+
+-- Ma'lumotlar: Assignments
+INSERT INTO Assignments (ID, Title, Subject, ClassID, Deadline, Difficulty, TeacherID, SubmissionsCount) VALUES (17497428368651, N'something new', N'Matematika', N'9-A', N'2025-06-13T23:59:59', N'oson', 17497426867300, 1);
+
+-- Ma'lumotlar: Grades
+INSERT INTO Grades (ID, StudentID, Subject, Grade, GradeDate, TeacherID, Comment) VALUES (17497431390030, 17497427421401, N'Matematika', 4, N'2025-06-12T20:45:38.974973', 17497426867300, N'yomon emas');
