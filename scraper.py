@@ -1,96 +1,100 @@
+# scraper.py
+# Bu faylga olx.uz saytidan bir nechta kategoriyalar bo'yicha ma'lumotlarni
+# qirib oluvchi (scraping) funksiya yoziladi. (TO'LIQ URL MANZILLARI BILAN)
+
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
+import time
 
-def scrape_olx_cars(pages: int = 1):
+# --- HAR BIR KATEGORIYANING TO'LIQ VA ISHLAYDIGAN MANZILI ---
+CATEGORIES = [
+    {'name': 'Yengil avtomobillar', 'url': 'https://www.olx.uz/d/transport/legkovye-avto/'},
+    {'name': 'Kvartiralar (Uzoq muddatli ijara)', 'url': 'https://www.olx.uz/d/nedvizhimost/kvartiry/arenda-dolgosrochnaya/'},
+    {'name': 'Telefonlar va Gadjjetlar', 'url': 'https://www.olx.uz/d/elektronika/telefony-i-gadzhety/'},
+    {'name': 'Noutbuklar', 'url': 'https://www.olx.uz/d/elektronika/kompyutery/noutbuki/'},
+    {'name': 'Bolalar kiyimi', 'url': 'https://www.olx.uz/d/detskiy-mir/detskaya-odezhda/'},
+]
+# -----------------------------------------------------------------
+
+def scrape_olx_by_categories(items_per_category: int = 2):
     """
-    OLX.uz saytining "Yengil avtomobillar" bo'limidan ma'lumotlarni qirib oladi
-    va natijani 'olx_cars_data.csv' fayliga saqlaydi.
+    OLX.uz saytidan oldindan belgilangan kategoriyalar bo'yicha ma'lumotlarni
+    qirib oladi va yagona CSV faylga saqlaydi.
     """
-    print(f"\n--- OLX.UZ'dan ma'lumotlarni qirib olish boshlandi ({pages} sahifa) ---")
-    all_ads = []
+    print(f"\n--- OLX.UZ'dan kategoriyalar bo'yicha ma'lumotlarni qirib olish boshlandi ---")
+    print(f"Har bir kategoriyadan {items_per_category} tadan ma'lumot olinadi.")
     
-    # Ba'zi saytlar botlarni bloklaydi, shuning uchun o'zimizni brauzer kabi ko'rsatamiz
+    all_ads_from_all_categories = []
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Accept-Language': 'en-US,en;q=0.9,uz;q=0.8,ru;q=0.7'
+        'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,uz;q=0.6'
     }
 
-    for page in range(1, pages + 1):
-        # OLX sahifalanish (pagination) uchun 'page' parametrini ishlatadi
-        url = f"https://www.olx.uz/d/transport/legkovye-avto/?page={page}"
-        print(f"🔄 {page}-sahifani yuklanmoqda: {url}")
+    for category in CATEGORIES:
+        category_name = category['name']
+        url = category['url'] # To'g'ridan-to'g'ri tayyor URL'ni olamiz
+        
+        print(f"\n🔄 Ishlanmoqda: '{category_name}' kategoriyasi...")
         
         try:
             response = requests.get(url, headers=headers, timeout=15)
-            # Agar so'rov muvaffaqiyatsiz bo'lsa, xabar berib, keyingi sahifaga o'tishga urinmaymiz
             if response.status_code != 200:
-                print(f"❌ Xato: Sahifani yuklab bo'lmadi (Status kodi: {response.status_code})")
-                break
+                print(f"❌ Xato: '{category_name}' sahifasini yuklab bo'lmadi (Kod: {response.status_code}) - URL: {url}")
+                continue
 
             soup = BeautifulSoup(response.content, 'html.parser')
-            
-            # E'lonlar ro'yxatini topish uchun asosiy konteynerni qidiramiz
-            # Bu klass nomi OLX sayti o'zgarganda o'zgarishi mumkin
+            # E'lonlar ro'yxatini topish uchun selektor o'zgarmagan
             ads_container = soup.find_all('div', class_='css-1sw7q4x')
             
             if not ads_container:
-                print(" E'lonlar topilmadi. Sayt strukturasi o'zgargan bo'lishi mumkin.")
-                break
+                print(f"⚠️ '{category_name}' da e'lonlar topilmadi.")
+                continue
 
+            count_added = 0
             for ad in ads_container:
+                if count_added >= items_per_category:
+                    break
+                
                 title_tag = ad.find('h6', class_='css-16v5mdi')
                 price_tag = ad.find('p', class_='css-10b0gli')
-                location_tag = ad.find('p', class_='css-1a4g99s') # Manzil va sana
+                location_tag = ad.find('p', class_='css-1a4g99s')
                 
-                # Agar teglar topilmasa, 'N/A' (Not Available) qiymatini beramiz
                 title = title_tag.get_text(strip=True) if title_tag else 'N/A'
                 price = price_tag.get_text(strip=True) if price_tag else 'N/A'
                 location_date = location_tag.get_text(strip=True) if location_tag else 'N/A - N/A'
-                
-                # Manzil va sanani ajratib olish
                 location = location_date.split(' - ')[0]
-                date_posted = location_date.split(' - ')[1] if ' - ' in location_date else 'N/A'
 
-                # Ma'lumotlarni tozalash
-                # "Договорная" yoki "Обмен" so'zlarini 0 ga tenglashtirish
                 if any(word in price for word in ['Договорная', 'Обмен']):
-                    cleaned_price = 0
+                    cleaned_price = "Kelishiladi"
                 else:
-                    # Narxdan harf va belgilarni olib tashlash
                     cleaned_price = ''.join(filter(str.isdigit, price))
                     cleaned_price = int(cleaned_price) if cleaned_price else 0
-
-                all_ads.append({
+                
+                all_ads_from_all_categories.append({
+                    'Kategoriya': category_name,
                     'Sarlavha': title,
-                    'Narxi (so\'m)': cleaned_price,
-                    'Manzil': location,
-                    'E\'lon sanasi': date_posted
+                    'Narxi': cleaned_price,
+                    'Manzil': location
                 })
+                count_added += 1
             
-            print(f" {page}-sahifadan {len(ads_container)} ta e'lon olindi.")
+            print(f"✅ '{category_name}' dan {count_added} ta ma'lumot muvaffaqiyatli olindi.")
+            time.sleep(1)
 
         except requests.exceptions.RequestException as e:
-            print(f" Internetga ulanishda xatolik yuz berdi: {e}")
-            break # Ulanish yo'q bo'lsa, tsiklni to'xtatamiz
+            print(f"❌ Internetga ulanishda xatolik: {e}")
+            break
             
-    if not all_ads:
-        print(" Yakuniy natija: Hech qanday ma'lumot olinmadi.")
+    if not all_ads_from_all_categories:
+        print("\n🔴 Yakuniy natija: Hech qanday ma'lumot olinmadi.")
         return
 
-    # Olingan ma'lumotlarni Pandas DataFrame ga o'tkazish
-    df = pd.DataFrame(all_ads)
-    
-    # Duplikatlarni olib tashlash
-    df.drop_duplicates(subset=['Sarlavha', 'Narxi (so\'m)', 'Manzil'], inplace=True)
-    
-    # Fayl nomini sana bilan yaratish
-    filename = f"olx_cars_data_{datetime.now().strftime('%Y-%m-%d')}.csv"
-    
-    # CSV faylga saqlash
+    df = pd.DataFrame(all_ads_from_all_categories)
+    filename = f"olx_multi_category_data_{datetime.now().strftime('%Y-%m-%d')}.csv"
     df.to_csv(filename, index=False, encoding='utf-8-sig')
     
     print(f"\n--- Natija ---")
-    print(f" Jami {len(df)} ta unikal e'lon '{filename}' fayliga muvaffaqiyatli saqlandi.")
+    print(f"🎉 Jami {len(df)} ta e'lon '{filename}' fayliga muvaffaqiyatli saqlandi.")
     print("-------------------------------------------\n")

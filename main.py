@@ -1,7 +1,7 @@
 from services import EduPlatform
 from models import Role
 from exporter import Exporter
-from scraper import scrape_olx_cars
+from scraper import scrape_olx_by_categories
 
 def print_header(title):
     """Menyular uchun chiroyli sarlavha chiqaradi."""
@@ -62,12 +62,20 @@ def admin_menu(platform: EduPlatform):
             exporter = Exporter(platform.data)
             exporter.export_all()
 
+
         elif choice == '6':
+            print("--- OLX.UZ'dan ma'lumot qirib olish (kategoriyalar bo'yicha) ---")
             try:
-                pages = int(input("Nechta sahifani qirib olish kerak? (masalan, 1): "))
-                scrape_olx_cars(pages)
+                # Funksiya nomi va so'rov o'zgardi
+                items_count = int(input("Har bir kategoriyadan nechta ma'lumot olinsin? (masalan, 2): "))
+                if items_count < 1:
+                    print("❌ Iltimos, 1 yoki undan katta son kiriting.")
+                    continue
+                # Yangi funksiyani chaqirish
+                scrape_olx_by_categories(items_per_category=items_count)
             except ValueError:
-                print(" Noto'g'ri raqam kiritildi.")
+                print("❌ Noto'g'ri raqam kiritildi.")
+        
         
         elif choice == '0':
             break
