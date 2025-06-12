@@ -218,6 +218,87 @@ def student_menu(platform: EduPlatform):
         else:
             print("⚠️ Noto'g'ri tanlov. Qayta urinib ko'ring.")
 
+def parent_menu(platform: EduPlatform):
+    """Ota-ona uchun menyu va funksiyalar."""
+    parent = platform._current_user
+    children_objects = [platform.data.get_user_by_id(child_id) for child_id in parent.children]
+    
+    while True:
+        print_header(f"Ota-ona paneli | Foydalanuvchi: {parent._full_name}")
+        print("1. Farzandlarim ro'yxati")
+        print("2. Farzandimning baholarini ko'rish")
+        print("3. Farzandimning vazifalari holatini ko'rish")
+        print("4. Mening xabarnomalarim")
+        print("0. Tizimdan chiqish (Logout)")
+        choice = input(">>> Tanlovingizni kiriting: ")
+
+        if choice == '1':
+            print("--- Sizning farzandlaringiz ---")
+            if not children_objects:
+                print("Tizimga farzandlaringiz biriktirilmagan.")
+            else:
+                for child in children_objects:
+                    if child:
+                        print(f"ID: {child._id} | Ism: {child._full_name} | Sinf: {child.grade_class}")
+
+        elif choice == '2' or choice == '3':
+            if not children_objects:
+                print("Tizimga farzandlaringiz biriktirilmagan.")
+                continue
+            
+            print("--- Qaysi farzandingiz ma'lumotlarini ko'rmoqchisiz? ---")
+            for i, child in enumerate(children_objects, 1):
+                if child:
+                    print(f"{i}. {child._full_name}")
+
+            try:
+                child_choice = int(input("Farzand raqamini tanlang: "))
+                if not (1 <= child_choice <= len(children_objects)):
+                    print("❌ Noto'g'ri raqam tanlandi.")
+                    continue
+                
+                selected_child = children_objects[child_choice - 1]
+
+                if choice == '2':
+                    print(f"\n--- {selected_child._full_name}ning baholari ---")
+                    grades = selected_child.view_grades()
+                    if not grades:
+                        print("Bu farzandingizning baholari hozircha yo'q.")
+                    else:
+                        for subject, grade_list in grades.items():
+                            print(f"{subject}: {grade_list}")
+                
+                elif choice == '3':
+                    print(f"\n--- {selected_child._full_name}ning vazifalari ---")
+                    student_assignments = [a for a in platform.data.assignments.values() if a.class_id == selected_child.grade_class]
+                    if not student_assignments:
+                        print("Bu farzandingizga berilgan vazifalar mavjud emas.")
+                    else:
+                        for assign in student_assignments:
+                            status_info = selected_child.assignments.get(assign.id)
+                            status = "topshirilmagan"
+                            if status_info:
+                                grade = "baholanmagan"
+                                if status_info.get('grade'):
+                                    grade = status_info['grade'].value
+                                status = f"{status_info['status']} (baho: {grade})"
+                            print(f"Mavzu: {assign.title} | Fan: {assign.subject} | Holati: {status}")
+
+            except ValueError:
+                print("❌ Iltimos, raqam kiriting.")
+
+        elif choice == '4':
+            print("--- Xabarnomalar ---")
+            print(platform._current_user.view_notifications())
+            for n in platform._current_user._notifications: n.mark_as_read()
+            
+        elif choice == '0':
+            break
+        else:
+            print("⚠️ Noto'g'ri tanlov.")
+
+# main.py -> main() funksiyasini quyidagicha o'zgartiring
+
 def main():
     """Dasturning asosiy ishga tushish funksiyasi."""
     platform = EduPlatform()
@@ -225,6 +306,7 @@ def main():
 
     while True:
         if not platform._current_user:
+            # ... bu qism o'zgarmaydi ...
             print_header("EduPlatform Tizimiga Kirish")
             print("1. Tizimga kirish (Login)")
             print("0. Dasturdan chiqish")
@@ -241,6 +323,7 @@ def main():
                 print("\n👋 Dasturdan foydalanganingiz uchun rahmat! Xayr!")
                 break
         else:
+            # --- SHU YERGA O'ZGARTIRISH KIRITILADI ---
             user_role = platform._current_user.role
             if user_role == Role.ADMIN:
                 admin_menu(platform)
@@ -248,6 +331,9 @@ def main():
                 teacher_menu(platform)
             elif user_role == Role.STUDENT:
                 student_menu(platform)
+            elif user_role == Role.PARENT: # yangi shartt
+        
+                parent_menu(platform)
             
             if platform._current_user:
                 platform.logout()
