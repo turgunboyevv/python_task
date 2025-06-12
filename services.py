@@ -1,5 +1,6 @@
 from models import *
 from data_store import PlatformData
+from exporter import Exporter
 
 class EduPlatform:
     """
@@ -98,6 +99,17 @@ class EduPlatform:
             
         self.data.remove_user(user_id_to_remove)
         return f" '{user_to_remove._full_name}' tizimdan muvaffaqiyatli o'chirildi."
+    
+
+def _auto_export_data(self):
+    """Barcha ma'lumotlarni avtomatik eksport qiladi."""
+    print("\n🔄 Ma'lumotlar ombori o'zgardi. Fayllar yangilanmoqda...")
+    try:
+        exporter = Exporter(self.data)
+        exporter.export_to_sql() # Faqat SQL ni yangilash
+        print("✅ .sql fayl muvaffaqiyatli yangilandi.")
+    except Exception as e:
+        print(f"❌ Avtomatik eksportda xatolik: {e}")
 
 
     # --- o'qituvci funksiyalari ---
