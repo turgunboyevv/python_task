@@ -64,7 +64,7 @@ class User(AbstractRole):
         self._full_name = new_data.get('full_name', self._full_name)
         self.phone = new_data.get('phone', self.phone)
         self.address = new_data.get('address', self.address)
-        print(f"✅ '{self._full_name}' profili muvaffaqiyatli yangilandi.")
+        print(f" '{self._full_name}' profili muvaffaqiyatli yangilandi.")
 
     def add_notification(self, notification):
         """Foydalanuvchiga yangi xabarnoma qo'shadi."""
@@ -77,7 +77,7 @@ class User(AbstractRole):
             return "Sizda yangi xabarnomalar yo'q."
         # Muhimlik darajasiga qarab saralash (muhimlari tepada)
         sorted_notifications = sorted(unread_notifications, key=lambda n: n.priority, reverse=True)
-        return "\n".join([f"[{n.created_at[:10]}] {'❗️(MUHIM) ' if n.priority > 1 else ''}{n.message}" for n in sorted_notifications])
+        return "\n".join([f"[{n.created_at[:10]}] {'(MUHIM) ' if n.priority > 1 else ''}{n.message}" for n in sorted_notifications])
 
 # O'quvchi sinfi ---
 class Student(User):
@@ -91,7 +91,7 @@ class Student(User):
     def submit_assignment(self, assignment, content: str) -> str:
         # Vazifa topshirish cheklovlari
         if len(content) > 500:
-            return "❌ Xato: Vazifa matni 500 belgidan oshmasligi kerak."
+            return " Xato: Vazifa matni 500 belgidan oshmasligi kerak."
         
         status = 'topshirildi'
         if datetime.now() > datetime.fromisoformat(assignment.deadline):
@@ -99,7 +99,7 @@ class Student(User):
         
         self.assignments[assignment.id] = {'submission': content, 'status': status, 'grade': None}
         assignment.add_submission(self._id, content)
-        return f"✅ '{assignment.title}' nomli vazifa muvaffaqiyatli topshirildi. Holati: {status}"
+        return f" '{assignment.title}' nomli vazifa muvaffaqiyatli topshirildi. Holati: {status}"
 
 # models.py -> class Student
 
@@ -147,7 +147,7 @@ class Teacher(User):
 
     def grade_assignment(self, student: Student, assignment, grade_value: int, comment: str):
         if student._id not in assignment.submissions:
-            return f"❌ Xato: {student._full_name} bu vazifani topshirmagan."
+            return f" Xato: {student._full_name} bu vazifani topshirmagan."
         
         new_grade = Grade(student._id, assignment.subject, grade_value, self._id, comment)
         
@@ -159,7 +159,7 @@ class Teacher(User):
             student.grades[assignment.subject] = []
         student.grades[assignment.subject].append(new_grade)
         
-        return f"✅ {student._full_name}ning '{assignment.title}' vazifasi {grade_value}ga baholandi."
+        return f" {student._full_name}ning '{assignment.title}' vazifasi {grade_value}ga baholandi."
         
 # Ota-ona sinfi ---
 class Parent(User):
@@ -246,7 +246,7 @@ class Schedule:
             # Bu mantiqni services.py da amalga oshirgan ma'qul
             raise ValueError(f"{self.class_id} sinfi uchun soat {time}da dars allaqachon mavjud.")
         self.lessons[time] = {"subject": subject, "teacher_id": teacher_id}
-        print(f"✅ Jadvalga qo'shildi: {self.day}, {time} - {subject}")
+        print(f" Jadvalga qo'shildi: {self.day}, {time} - {subject}")
 
 # Xabarnoma sinfi ---
 class Notification:

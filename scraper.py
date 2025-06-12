@@ -36,7 +36,7 @@ def scrape_olx_cars(pages: int = 1):
             ads_container = soup.find_all('div', class_='css-1sw7q4x')
             
             if not ads_container:
-                print("⚠️ E'lonlar topilmadi. Sayt strukturasi o'zgargan bo'lishi mumkin.")
+                print(" E'lonlar topilmadi. Sayt strukturasi o'zgargan bo'lishi mumkin.")
                 break
 
             for ad in ads_container:
@@ -69,14 +69,14 @@ def scrape_olx_cars(pages: int = 1):
                     'E\'lon sanasi': date_posted
                 })
             
-            print(f"✅ {page}-sahifadan {len(ads_container)} ta e'lon olindi.")
+            print(f" {page}-sahifadan {len(ads_container)} ta e'lon olindi.")
 
         except requests.exceptions.RequestException as e:
-            print(f"❌ Internetga ulanishda xatolik yuz berdi: {e}")
+            print(f" Internetga ulanishda xatolik yuz berdi: {e}")
             break # Ulanish yo'q bo'lsa, tsiklni to'xtatamiz
             
     if not all_ads:
-        print("🔴 Yakuniy natija: Hech qanday ma'lumot olinmadi.")
+        print(" Yakuniy natija: Hech qanday ma'lumot olinmadi.")
         return
 
     # Olingan ma'lumotlarni Pandas DataFrame ga o'tkazish
@@ -92,5 +92,5 @@ def scrape_olx_cars(pages: int = 1):
     df.to_csv(filename, index=False, encoding='utf-8-sig')
     
     print(f"\n--- Natija ---")
-    print(f"🎉 Jami {len(df)} ta unikal e'lon '{filename}' fayliga muvaffaqiyatli saqlandi.")
+    print(f" Jami {len(df)} ta unikal e'lon '{filename}' fayliga muvaffaqiyatli saqlandi.")
     print("-------------------------------------------\n")

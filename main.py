@@ -46,7 +46,7 @@ def admin_menu(platform: EduPlatform):
                 result = platform.admin_add_user(role, full_name, email, password, **kwargs)
                 print(result)
             except Exception as e:
-                print(f"❌ Xatolik yuz berdi: {e}")
+                print(f" Xatolik yuz berdi: {e}")
 
         elif choice == '3':
             print("--- Tizimdagi foydalanuvchilar ---")
@@ -67,12 +67,12 @@ def admin_menu(platform: EduPlatform):
                 pages = int(input("Nechta sahifani qirib olish kerak? (masalan, 1): "))
                 scrape_olx_cars(pages)
             except ValueError:
-                print("❌ Noto'g'ri raqam kiritildi.")
+                print(" Noto'g'ri raqam kiritildi.")
         
         elif choice == '0':
             break
         else:
-            print("⚠️ Noto'g'ri tanlov. Qayta urinib ko'ring.")
+            print(" Noto'g'ri tanlov. Qayta urinib ko'ring.")
 
 
 def teacher_menu(platform: EduPlatform):
@@ -99,7 +99,7 @@ def teacher_menu(platform: EduPlatform):
                 # -------------------------
                 print(result)
             except Exception as e:
-                print(f"❌ Xatolik: {e}")
+                print(f" Xatolik: {e}")
 
         elif choice == '2':
             print("--- Baholanmagan topshiriqlar ---")
@@ -128,7 +128,7 @@ def teacher_menu(platform: EduPlatform):
                 )
                 print(result)
             except (ValueError, IndexError):
-                print("❌ Noto'g'ri tanlov yoki raqam kiritildi.")
+                print(" Noto'g'ri tanlov yoki raqam kiritildi.")
 
         elif choice == '3':
             print("--- Xabarnomalar ---")
@@ -138,7 +138,7 @@ def teacher_menu(platform: EduPlatform):
         elif choice == '0':
             break
         else:
-            print("⚠️ Noto'g'ri tanlov.")
+            print(" Noto'g'ri tanlov.")
 
 
 def student_menu(platform: EduPlatform):
@@ -200,7 +200,7 @@ def student_menu(platform: EduPlatform):
                 result = platform.student_submit_assignment(assignment_id, content)
                 print(result)
             except ValueError:
-                print("❌ Noto'g'ri ID kiritildi.")
+                print(" Noto'g'ri ID kiritildi.")
         elif choice == '3':
             print("--- Baholarim ---")
             grades = platform._current_user.view_grades()
@@ -216,7 +216,7 @@ def student_menu(platform: EduPlatform):
         elif choice == '0':
             break
         else:
-            print("⚠️ Noto'g'ri tanlov. Qayta urinib ko'ring.")
+            print(" Noto'g'ri tanlov. Qayta urinib ko'ring.")
 
 def parent_menu(platform: EduPlatform):
     """Ota-ona uchun menyu va funksiyalar."""
@@ -254,7 +254,7 @@ def parent_menu(platform: EduPlatform):
             try:
                 child_choice = int(input("Farzand raqamini tanlang: "))
                 if not (1 <= child_choice <= len(children_objects)):
-                    print("❌ Noto'g'ri raqam tanlandi.")
+                    print(" Noto'g'ri raqam tanlandi.")
                     continue
                 
                 selected_child = children_objects[child_choice - 1]
@@ -285,7 +285,7 @@ def parent_menu(platform: EduPlatform):
                             print(f"Mavzu: {assign.title} | Fan: {assign.subject} | Holati: {status}")
 
             except ValueError:
-                print("❌ Iltimos, raqam kiriting.")
+                print(" Iltimos, raqam kiriting.")
 
         elif choice == '4':
             print("--- Xabarnomalar ---")
@@ -295,7 +295,7 @@ def parent_menu(platform: EduPlatform):
         elif choice == '0':
             break
         else:
-            print("⚠️ Noto'g'ri tanlov.")
+            print(" Noto'g'ri tanlov.")
 
 # main.py -> main() funksiyasini quyidagicha o'zgartiring
 
@@ -316,11 +316,11 @@ def main():
                 email = input("Email: ")
                 password = input("Parol: ")
                 if platform.login(email, password):
-                    print(f"✅ Xush kelibsiz, {platform._current_user._full_name}!")
+                    print(f" Xush kelibsiz, {platform._current_user._full_name}!")
                 else:
-                    print("❌ Email yoki parol xato. Qaytadan urinib ko'ring.")
+                    print(" Email yoki parol xato. Qaytadan urinib ko'ring.")
             elif choice == '0':
-                print("\n👋 Dasturdan foydalanganingiz uchun rahmat! Xayr!")
+                print("\n Dasturdan foydalanganingiz uchun rahmat! Xayr!")
                 break
         else:
             # --- SHU YERGA O'ZGARTIRISH KIRITILADI ---

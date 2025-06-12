@@ -91,15 +91,15 @@ class Exporter:
             
             full_path = os.path.abspath(filename)
             self._log_export("XLSX", full_path)
-            print(f"✅ Ma'lumotlar '{full_path}' fayliga muvaffaqiyatli saqlandi.")
+            print(f" Ma'lumotlar '{full_path}' fayliga muvaffaqiyatli saqlandi.")
         except Exception as e:
-            print(f"❌ XLSX ga eksport qilishda xatolik: {e}")
+            print(f" XLSX ga eksport qilishda xatolik: {e}")
     
     def export_to_csv(self, directory: str = "csv_export"):
         """Har bir jadvalni alohida .csv fayl qilib, maxsus papkaga saqlaydi."""
         dfs = self._prepare_dataframes()
         if not dfs:
-            print("⚠️ Eksport uchun ma'lumotlar mavjud emas.")
+            print(" Eksport uchun ma'lumotlar mavjud emas.")
             return
 
         try:
@@ -112,15 +112,15 @@ class Exporter:
             
             full_path = os.path.abspath(directory)
             self._log_export("CSV", full_path)
-            print(f"✅ Ma'lumotlar '{full_path}' papkasiga CSV formatida saqlandi.")
+            print(f" Ma'lumotlar '{full_path}' papkasiga CSV formatida saqlandi.")
         except Exception as e:
-            print(f"❌ CSV ga eksport qilishda xatolik: {e}")
+            print(f" CSV ga eksport qilishda xatolik: {e}")
 
     def export_to_sql(self, filename: str = "edu_platform_schema.sql"):
         """SSMS uchun SQL `CREATE TABLE` va `INSERT` so'rovlarini generatsiya qiladi."""
         dfs = self._prepare_dataframes()
         if not dfs:
-            print("⚠️ Eksport uchun ma'lumotlar mavjud emas.")
+            print(" Eksport uchun ma'lumotlar mavjud emas.")
             return
 
         try:
@@ -204,6 +204,6 @@ CREATE TABLE Grades (
 
             full_path = os.path.abspath(filename)
             self._log_export("SQL", full_path)
-            print(f"✅ SSMS uchun SQL skript '{full_path}' fayliga yozildi.")
+            print(f" SSMS uchun SQL skript '{full_path}' fayliga yozildi.")
         except Exception as e:
-            print(f"❌ SQL ga eksport qilishda xatolik: {e}")
+            print(f" SQL ga eksport qilishda xatolik: {e}")

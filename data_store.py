@@ -1,4 +1,4 @@
-from models import Student # Kelajakda kerak bo'lishi mumkin
+from models import Student
 
 class PlatformData:
     """
@@ -6,11 +6,11 @@ class PlatformData:
     markazlashtirilgan sinf. Bu bizning soddalashtirilgan ma'lumotlar bazamiz.
     """
     def __init__(self):
-        # Ma'lumotlar lug'atlar (dictionaries) ichida saqlanadi.
-        # Kalit -> ID, Qiymat -> Obyektning o'zi.
-        self.users = {}         # {user_id: User_obyekti (Student, Teacher, ...)}
-        self.assignments = {}   # {assignment_id: Assignment_obyekti}
-        self.schedules = {}     # {schedule_id: Schedule_obyekti}
+        # Ma'lumotlar lugatlar (dictionariess) ichida saqlanadi.
+        # Kalit - ID, Qiymat -Obyektning o'zi.
+        self.users = {}         # user_id: User_obyekti (Student, Teacher, ...
+        self.assignments = {}   # assignment_id: Assignment_obyekti
+        self.schedules = {}     # schedule_id: Schedule_obyekti
         
         print("ℹ️  Ma'lumotlar ombori (in-memory) muvaffaqiyatli ishga tushirildi.")
 
@@ -52,7 +52,7 @@ class PlatformData:
 
     def get_all_students(self) -> list:
         """Tizimdagi barcha o'quvchilarni ro'yxat qilib qaytaradi."""
-        # 'isinstance' yordamida obyektning qaysi sinfga tegishli ekanligini tekshiramiz
+        # 'isinstance' yordamida obyektning qaysi sinfga tegishli ekanligini tekshirarkanmiz --> research
         return [user for user in self.users.values() if isinstance(user, Student)]
 
     def get_students_by_class(self, class_id: str) -> list:

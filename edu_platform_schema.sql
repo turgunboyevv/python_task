@@ -1,7 +1,6 @@
--- EduPlatform uchun SQL Skript
--- Generatsiya qilingan sana: 2025-06-12T08:53:13.890112
+-- Eduplatform uchun sql skript
 
--- 1. Jadvallarni yaratish
+-- Jadvallarni yaratish
 
 CREATE TABLE Users (
     ID BIGINT PRIMARY KEY,
@@ -35,11 +34,12 @@ CREATE TABLE Grades (
     Comment NVARCHAR(MAX)
 );
 
--- 2. Ma'lumotlarni jadvallarga qo'shish
+--  Ma'lumotlarni jadvallarga qo'shish
 
--- Ma'lumotlar: Users
-INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497002165506, N'Admin Akmalov', N'admin@edu.com', N'Admin', NULL, NULL, N'2025-06-12T08:50:16.480407', N'');
-INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497002165404, N'Ustoz Olimov', N'teacher@edu.com', N'O''qituvchi', NULL, NULL, N'2025-06-12T08:50:16.495342', N'Fanlar: Matematika, Fizika');
-INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497002165853, N'Ali Valiyev', N'ali@edu.com', N'O''quvchi', NULL, NULL, N'2025-06-12T08:50:16.510574', N'Sinf: 9-A');
-INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497002166005, N'Vali Aliyev', N'vali@edu.com', N'O''quvchi', NULL, NULL, N'2025-06-12T08:50:16.520779', N'Sinf: 9-A');
-INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497002165507, N'Valiyev Ota', N'parent@edu.com', N'Ota-ona', NULL, NULL, N'2025-06-12T08:50:16.537692', N'Farzandlar soni: 2');
+-- Users
+INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497072356648, N'Admin Akmalov', N'admin@edu.com', N'Admin', NULL, NULL, N'2025-06-12T10:47:15.600583', N'');
+INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497072356205, N'Ustoz Olimov', N'teacher@edu.com', N'O''qituvchi', NULL, NULL, N'2025-06-12T10:47:15.616203', N'Fanlar: Matematika, Fizika');
+INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497072356462, N'Ali Valiyev', N'ali@edu.com', N'O''quvchi', NULL, NULL, N'2025-06-12T10:47:15.618645', N'Sinf: 9-A');
+INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497072356286, N'Vali Aliyev', N'vali@edu.com', N'O''quvchi', NULL, NULL, N'2025-06-12T10:47:15.622597', N'Sinf: 9-A');
+INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497072356725, N'Valiyev Ota', N'parent@edu.com', N'Ota-ona', NULL, NULL, N'2025-06-12T10:47:15.631383', N'Farzandlar soni: 2');
+INSERT INTO Users (ID, FullName, Email, Role, Phone, Address, RegisteredAt, ExtraInfo) VALUES (17497073468052, N'Jaxongir Turgunboyev', N'turgunboyevv7:gmail.com', N'O''quvchi', NULL, NULL, N'2025-06-12T10:49:06.716607', N'Sinf: 11-A');
