@@ -1,7 +1,3 @@
-# main.py
-# Bu dasturning asosiy ishga tushirish nuqtasi. Foydalanuvchi interfeysi (CLI) shu yerda bo'ladi.
-
-# Barcha kerakli modullarni import qilamiz
 from services import EduPlatform
 from models import Role
 from exporter import Exporter

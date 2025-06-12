@@ -1,8 +1,3 @@
-# Bu faylga asosiy biznes mantiq, ya'ni EduPlatform sinfi va uning metodlari yoziladi.
-# services.py
-# Bu faylga asosiy biznes mantiq, ya'ni EduPlatform sinfi va uning metodlari yoziladi.
-
-# Modellar va ma'lumotlar omborini import qilamiz
 from models import *
 from data_store import PlatformData
 

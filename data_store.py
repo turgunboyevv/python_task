@@ -1,7 +1,3 @@
-# Bu faylga ma'lumotlarni xotirada saqlaydigan PlatformData sinfi joylashtiriladi.
-# data_store.py
-# Bu faylga ma'lumotlarni xotirada saqlaydigan PlatformData sinfi joylashtiriladi.
-
 from models import Student # Kelajakda kerak bo'lishi mumkin
 
 class PlatformData:

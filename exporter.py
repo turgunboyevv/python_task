@@ -1,6 +1,3 @@
-# exporter.py
-# Bu faylga ma'lumotlarni XLSX, CSV va SQL formatlariga eksport qiluvchi Exporter sinfi yoziladi.
-
 import pandas as pd
 import os
 from datetime import datetime

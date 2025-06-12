@@ -1,6 +1,3 @@
-# models.py
-# Bu faylga barcha sinflar (User, Student, Teacher, Assignment va hk) joylashtiriladi.
-
 import hashlib
 from abc import ABC, abstractmethod
 from datetime import datetime
@@ -23,7 +20,7 @@ class Role(Enum):
     STUDENT = "O'quvchi"
     PARENT = "Ota-ona"
 
-# --- 1. Abstrakt sinf (boshqa barcha rollar uchun asos) ---
+#Abstrakt sinf (boshqa barcha rollar uchun asos) ---
 class AbstractRole(ABC):
     def __init__(self, full_name: str, email: str, password: str):
         self._id = generate_id()
@@ -43,7 +40,7 @@ class AbstractRole(ABC):
         """Foydalanuvchi profilini yangilaydi."""
         pass
 
-# --- 2. Asosiy Foydalanuvchi sinfi ---
+# Asosiy Foydalanuvchi sinfi ---
 class User(AbstractRole):
     def __init__(self, full_name: str, email: str, password: str, role: Role, phone: str = None, address: str = None):
         super().__init__(full_name, email, password)
@@ -82,7 +79,7 @@ class User(AbstractRole):
         sorted_notifications = sorted(unread_notifications, key=lambda n: n.priority, reverse=True)
         return "\n".join([f"[{n.created_at[:10]}] {'❗️(MUHIM) ' if n.priority > 1 else ''}{n.message}" for n in sorted_notifications])
 
-# --- 3. O'quvchi sinfi ---
+# O'quvchi sinfi ---
 class Student(User):
     def __init__(self, full_name: str, email: str, password: str, grade_class: str):
         super().__init__(full_name, email, password, Role.STUDENT)
@@ -135,7 +132,7 @@ class Student(User):
             'count': len(grades_to_analyze)
         }
 
-# --- 4. O'qituvchi sinfi ---
+# O'qituvchi sinfi ---
 class Teacher(User):
     def __init__(self, full_name: str, email: str, password: str, subjects: list):
         super().__init__(full_name, email, password, Role.TEACHER)
@@ -164,7 +161,7 @@ class Teacher(User):
         
         return f"✅ {student._full_name}ning '{assignment.title}' vazifasi {grade_value}ga baholandi."
         
-# --- 5. Ota-ona sinfi ---
+# Ota-ona sinfi ---
 class Parent(User):
     def __init__(self, full_name: str, email: str, password: str):
         super().__init__(full_name, email, password, Role.PARENT)
@@ -179,7 +176,7 @@ class Parent(User):
         print(f"--- {child._full_name}ning baholari ---")
         return child.view_grades()
 
-# --- 6. Admin sinfi ---
+# Admin sinfi ---
 class Admin(User):
     def __init__(self, full_name: str, email: str, password: str):
         super().__init__(full_name, email, password, Role.ADMIN)
@@ -199,7 +196,7 @@ class Admin(User):
             report += "-" * 50 + "\n"
         return report
 
-# --- 7. Vazifa sinfi ---
+# Vazifa sinfi ---
 class Assignment:
     def __init__(self, title: str, description: str, deadline: str, subject: str, teacher_id: int, class_id: str, difficulty: str):
         self.id = generate_id()
@@ -220,7 +217,7 @@ class Assignment:
     def set_grade(self, student_id: int, grade_obj):
         self.grades[student_id] = grade_obj
 
-# --- 8. Baho sinfi ---
+# Baho sinfi ---
 class Grade:
     def __init__(self, student_id: int, subject: str, value: int, teacher_id: int, comment: str = None):
         if not 1 <= value <= 5:
@@ -234,7 +231,7 @@ class Grade:
         self.teacher_id = teacher_id
         self.comment = comment
 
-# --- 9. Dars jadvali sinfi ---
+# Dars jadvali sinfi ---
 class Schedule:
     def __init__(self, class_id: str, day: str):
         self.id = generate_id()
@@ -251,7 +248,7 @@ class Schedule:
         self.lessons[time] = {"subject": subject, "teacher_id": teacher_id}
         print(f"✅ Jadvalga qo'shildi: {self.day}, {time} - {subject}")
 
-# --- 10. Xabarnoma sinfi ---
+# Xabarnoma sinfi ---
 class Notification:
     def __init__(self, recipient_id: int, message: str, priority: int = 1):
         self.id = generate_id()

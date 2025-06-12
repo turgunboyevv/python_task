@@ -1,7 +1,3 @@
-# Bu faylga olx.uz saytidan ma'lumotlarni qirib oluvchi (scraping) funksiya yoziladi.
-# scraper.py
-# Bu faylga olx.uz saytidan ma'lumotlarni qirib oluvchi (scraping) funksiya yoziladi.
-
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
