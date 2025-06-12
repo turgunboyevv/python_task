@@ -1,57 +1,77 @@
 # scraper.py
 # Bu faylga olx.uz saytidan bir nechta kategoriyalar bo'yicha ma'lumotlarni
-# qirib oluvchi (scraping) funksiya yoziladi. (TO'LIQ URL MANZILLARI BILAN)
+# qirib oluvchi (scraping) funksiya yoziladi. (BLOKDAN HIMOYALANISHGA URINISH BILAN)
 
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
 import time
+import random
 
-# --- HAR BIR KATEGORIYANING TO'LIQ VA ISHLAYDIGAN MANZILI ---
+# Manzillar to'g'ri, ularga tegmaymiz
+# scraper.py faylida FAQAT shu ro'yxatni o'zgartiring
+
+# --- FAQAT BARQAROR ISHLAYDIGAN, TEKSHIRILGAN MANZILLAR ---
 CATEGORIES = [
-    {'name': 'Yengil avtomobillar', 'url': 'https://www.olx.uz/d/transport/legkovye-avto/'},
     {'name': 'Kvartiralar (Uzoq muddatli ijara)', 'url': 'https://www.olx.uz/d/nedvizhimost/kvartiry/arenda-dolgosrochnaya/'},
-    {'name': 'Telefonlar va Gadjjetlar', 'url': 'https://www.olx.uz/d/elektronika/telefony-i-gadzhety/'},
     {'name': 'Noutbuklar', 'url': 'https://www.olx.uz/d/elektronika/kompyutery/noutbuki/'},
     {'name': 'Bolalar kiyimi', 'url': 'https://www.olx.uz/d/detskiy-mir/detskaya-odezhda/'},
+    # Agar boshqa ishlaydigan kategoriya topsangiz, shu yerga qo'shishingiz mumkin
 ]
-# -----------------------------------------------------------------
+
+
+# O'zimizni turli xil brauzerlar kabi ko'rsatamiz
+USER_AGENTS = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0'
+]
+
+def get_random_headers():
+    """Har bir so'rov uchun tasodifiy User-Agent tanlaydi."""
+    return {'User-Agent': random.choice(USER_AGENTS),
+            'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,uz;q=0.6'}
+# --- YAKUNLANDI ---
 
 def scrape_olx_by_categories(items_per_category: int = 2):
-    """
-    OLX.uz saytidan oldindan belgilangan kategoriyalar bo'yicha ma'lumotlarni
-    qirib oladi va yagona CSV faylga saqlaydi.
-    """
-    print(f"\n--- OLX.UZ'dan kategoriyalar bo'yicha ma'lumotlarni qirib olish boshlandi ---")
+    print(f"\n--- OLX.UZ'dan ma'lumotlarni qirib olish boshlandi ---")
     print(f"Har bir kategoriyadan {items_per_category} tadan ma'lumot olinadi.")
     
     all_ads_from_all_categories = []
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,uz;q=0.6'
-    }
+    
+    # Kategoriyalarni ham tasodifiy tartibda aylanib chiqamiz
+    random.shuffle(CATEGORIES)
 
     for category in CATEGORIES:
         category_name = category['name']
-        url = category['url'] # To'g'ridan-to'g'ri tayyor URL'ni olamiz
+        url = category['url']
         
         print(f"\n🔄 Ishlanmoqda: '{category_name}' kategoriyasi...")
         
         try:
-            response = requests.get(url, headers=headers, timeout=15)
+            # Har bir so'rovdan oldin tasodifiy pauza qo'yamiz (1 dan 3 sekundgacha)
+            sleep_time = random.uniform(1, 3)
+            print(f"   (Pauza: {sleep_time:.1f} sekund)")
+            time.sleep(sleep_time)
+
+            # Har bir so'rov uchun yangi, tasodifiy sarlavha (header) olamiz
+            headers = get_random_headers()
+            
+            response = requests.get(url, headers=headers, timeout=20)
+            
             if response.status_code != 200:
                 print(f"❌ Xato: '{category_name}' sahifasini yuklab bo'lmadi (Kod: {response.status_code}) - URL: {url}")
                 continue
 
             soup = BeautifulSoup(response.content, 'html.parser')
-            # E'lonlar ro'yxatini topish uchun selektor o'zgarmagan
             ads_container = soup.find_all('div', class_='css-1sw7q4x')
             
             if not ads_container:
                 print(f"⚠️ '{category_name}' da e'lonlar topilmadi.")
                 continue
 
+            # ... qolgan kod o'zgarmaydi ...
             count_added = 0
             for ad in ads_container:
                 if count_added >= items_per_category:
@@ -81,7 +101,6 @@ def scrape_olx_by_categories(items_per_category: int = 2):
                 count_added += 1
             
             print(f"✅ '{category_name}' dan {count_added} ta ma'lumot muvaffaqiyatli olindi.")
-            time.sleep(1)
 
         except requests.exceptions.RequestException as e:
             print(f"❌ Internetga ulanishda xatolik: {e}")
