@@ -13,7 +13,7 @@ DB_CONFIG = {
     'server': 'WIN-A5I5TM5OKQQ\SQLEXPRESS',
     'database': 'SaraminData_Full_UZ',  # BUTUNLAY YANGI BAZA NOMI
     'username': 'sa',
-    'password': 'turgunboyevv_777'
+    'password': 'parol'
     # 'trusted_connection': 'yes'
 }
 # ===================================================================
